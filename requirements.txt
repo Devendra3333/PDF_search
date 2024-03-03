@@ -1,0 +1,10 @@
+streamlit
+langchain
+openai
+python-dotenv
+pandasql
+openpyxl
+langchain_experimental
+langchain_openai
+pypdf
+faiss-cpu
