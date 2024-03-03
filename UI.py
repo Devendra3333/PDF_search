@@ -19,15 +19,8 @@ user_input = st.text_input("Enter your query:", "")
 if st.button('Search'):
     if user_input:
         results = chat(user_input)
-
         if results:
-            for result in results:
-                # Highlight the search term in the response text
-                highlighted_text = highlight_search_terms(result['text'], user_input)
-                # Display the page number and highlighted text
-                st.markdown(f"Page number: {result['page_number']}", unsafe_allow_html=True)
-                st.markdown(highlighted_text, unsafe_allow_html=True)
-                st.write("---")  # Adds a visual separator between results
+            st.text_area("Bot:", value=results, height=300)
         else:
             st.write("No results found.")
     else:
