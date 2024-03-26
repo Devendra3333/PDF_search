@@ -10,7 +10,7 @@ from langchain.chat_models import ChatOpenAI
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-loader = PyPDFLoader("test.pdf")
+loader = PyPDFLoader("fallen.pdf")
 pages = loader.load_and_split()
 
 faiss_index = FAISS.from_documents(pages, OpenAIEmbeddings(model="text-embedding-3-small",deployment="text-embedding-3-small"))
