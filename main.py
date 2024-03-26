@@ -13,19 +13,18 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 loader = PyPDFLoader("test.pdf")
 pages = loader.load_and_split()
 
-with get_openai_callback() as cb:
-    faiss_index = FAISS.from_documents(pages, OpenAIEmbeddings(model="text-embedding-3-small",deployment="text-embedding-3-small"))
-    print(cb)
+faiss_index = FAISS.from_documents(pages, OpenAIEmbeddings(model="text-embedding-3-small",deployment="text-embedding-3-small"))
 
-def chat(input_text):
-    docs = faiss_index.similarity_search(input_text, k=1)
-    chat = ChatOpenAI(
+chat = ChatOpenAI(
         openai_api_key=openai.api_key,
-        model_name="gpt-4",
+        model_name="gpt-4-0125-preview",
         temperature=0.2
     )
-    prompt = f''' Provided is an input question along with 4 options and the text related to that question. 
-    Read the text clearly, carefully and completely and give the correct option for the input question.
+
+def chat_prompt(input_text):
+    docs = faiss_index.similarity_search(input_text, k=1)
+    prompt = f''' Provided is an input question  and the text related to that question. 
+    Read the text clearly, carefully and completely and give the correct answer for the input question.
      
     {input_text}
     
@@ -33,4 +32,8 @@ def chat(input_text):
     
     '''
 
-    return chat.predict(prompt)
+    with get_openai_callback() as cb:
+        response = chat.invoke(prompt)
+        print(cb)
+        return response.content, docs
+
